@@ -47,7 +47,7 @@ private:
      */
     ///@{
 
-     nodes;                     // Mesh Node list
+    Node** nodes;                     // Mesh Node list
     Element **elements;               // Mesh Elements list
     Condition **dirichlet_conditions; // Mesh Dirichelet Conditions list
     Condition **neumann_conditions;   // Mesh Nueman Conditions list
@@ -58,6 +58,12 @@ private:
 public:
     Mesh() {}
 
+    /**
+     * @brief Destroy the Mesh object
+     * 
+     * Clean all arrays, its necessary this,since we allocate the needed memory manualy, so its important
+     * free all arrays, in order to avoid memory leakeage  
+     */
     ~Mesh()
     {
         free(nodes);
@@ -88,6 +94,10 @@ public:
         return quantities[position];
     }
 
+    /**
+     * @brief Allocate Neccesary Memory Manualy 
+     * 
+     */
     void init_arrays()
     {
         nodes = (Node **)malloc(sizeof(Node *) * quantities[NUM_NODES]);
@@ -96,6 +106,8 @@ public:
         neumann_conditions = (Condition **)malloc(sizeof(Condition *) * quantities[NUM_NEUMANN]);
     }
 
+
+    // Basic SETTER AND GETTERS
     void insert_node(Node *node, int position)
     {
         nodes[position] = node;
@@ -126,6 +138,7 @@ public:
         return dirichlet_conditions[position];
     }
 
+    //Loop through the list of conditions, if the specified id has a condition
     bool does_node_have_dirichlet_condition(int id)
     {
         bool ans = false;

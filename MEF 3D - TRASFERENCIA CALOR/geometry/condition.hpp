@@ -1,3 +1,17 @@
+/**
+ * @file geometry/condition.hpp
+ *
+ * @author Enmanuel Amaya, MSc. 2023 *
+ * @author Modified By: Grupo 09 - sec 01
+ *
+ * @brief Condition Type
+ * @version 1
+ * @date 2023-06-30
+ *
+ * A condition is a relation of a node and boundary condition value 
+ * has a setter and getter for the private objects
+ * 
+ * Specifies which nodes should be considered to apply the Dirichlet and Neumman boundary conditions. */
 class Condition {
     private:
         Node* node;

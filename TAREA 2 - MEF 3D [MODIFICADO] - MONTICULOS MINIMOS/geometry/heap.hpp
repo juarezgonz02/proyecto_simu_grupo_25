@@ -2,7 +2,12 @@
 #include <cmath>
 #include "node.hpp"
 using namespace std;
-
+/**
+ * @brief HEAP IMPLEMENTATION 
+ * 
+ * This implementation is a hibrid, because we use an array to save data, but,
+ * access, and writting is using binary tree operations
+ */
 class MinHeap{
     Node **heap_array; // pointer to array of elements in heap
     int capacity; // maximum possible size of min heap
@@ -16,6 +21,7 @@ public:
         this->heap_array = (Node **)malloc(sizeof(Node *) * capacity);
     }
 
+    //Since we use malloc, it´s needed to clean memory manually
     ~MinHeap(){
         free(heap_array);
     }
@@ -47,7 +53,11 @@ public:
     // method to get index of right child of node at index i
     int right(int i){ return (2*i + 2); }
 
-      // method to inserts a new key 'k'
+    /**
+     * @brief Insert a node into heap
+     * 
+     * @param k Node to insert
+     */
     void insert(Node* k){
 
         if (heap_size == capacity){
@@ -67,9 +77,15 @@ public:
         cout << heap_array[heap_size-1]->get_ID() << " " << heap_array[heap_size-1]->get_x_coordinate() << "\n";
     }
 
-
+    /**
+     * @brief Get the Node By Id 
+     * 
+     * @param id To find in Heap
+     * @return found Node* 
+     */
     Node* getNodeById(int id){
 
+        //Starts looking at position 0
         int i = 0;
         int found = findFrom(i, &id);
 
@@ -78,6 +94,24 @@ public:
     }
 
 private: 
+    /**
+     * @brief Find a node by its id, in the node heap
+     * 
+     * This is a complete search of the heap
+     * 
+     * Ask if the current i, is not out of bounds
+     * Ask if the heap has a value at current i
+     * 
+     * Always a condition fails it return/sets found at -1
+     * 
+     * Then look a left children of node in heap, and right children, this will generate that the
+     * search starts scrolling through the tree until finding a node that returns a value other than -1
+     * 
+     * @param i index to start search 
+     * @param find value to find
+     * 
+     * @return position found 
+     */
     int findFrom(int i, int* find){
         
         int found = -1; 

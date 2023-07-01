@@ -1,3 +1,16 @@
+/**
+ * @file geometry/node.hpp
+ *
+ * @author Enmanuel Amaya, MSc. 2023 *
+ * @author Modified By: Grupo 09 - sec 01
+ *
+ * @brief Node
+ * @version 1
+ * @date 2023-06-30
+ *
+ * A Node is a colecction of coordinates X, Y, Z
+ * has a setter and getter for the private objects
+ */
 class Node {
     // 3D MEF CHANGE
     private:

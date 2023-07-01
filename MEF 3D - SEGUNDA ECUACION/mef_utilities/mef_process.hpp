@@ -15,7 +15,7 @@
  *
  *  Especial implementation of FEM 3D for Heat Transfer model has the form of
  *
- *  [((k*V)/(J*J))((B^T)(A^T)(A*B))][T1, T2, T3, T4]=(QL/24)[1,1,1,1]
+ *  [((1)/(3360*J))((B^T)(A^T)(A*B))][T1, T2, T3, T4]=(J/105)[1,1,1,1]
  *
  *  Where k is the thermal conductivity
  *  Where B =
@@ -27,26 +27,6 @@
  */
 #include <cmath>
 using namespace std;
-
-float calculate_local_volume(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4);
-float calculate_local_volume(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4)
-{
-    // 3D MEF CHANGE
-    Matrix volume_matrix(3, 3);
-    volume_matrix.set((x2 - x1), 0, 0);
-    volume_matrix.set((y2 - y1), 0, 1);
-    volume_matrix.set((z2 - z1), 0, 2);
-
-    volume_matrix.set((x3 - x1), 1, 0);
-    volume_matrix.set((y3 - y1), 1, 1);
-    volume_matrix.set((z3 - z1), 1, 2);
-
-    volume_matrix.set((x4 - x1), 2, 0);
-    volume_matrix.set((y4 - y1), 2, 1);
-    volume_matrix.set((z4 - z1), 2, 2);
-
-    return (1.0 / 6.0) * abs(determinant(&volume_matrix));
-}
 
 float calculate_local_jacobian(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3, float x4, float y4, float z4)
 {
@@ -117,12 +97,6 @@ void create_local_K(Matrix *K,int element_id, Mesh *M)
 
 
 
-    float volume = calculate_local_volume(x1, y1, z1,
-                                          x2, y2, z2,
-                                          x3, y3, z3,
-                                          x4, y4, z4);
-
-
     float J = calculate_local_jacobian(x1, y1, z1,
                                        x2, y2, z2,
                                        x3, y3, z3,
@@ -143,17 +117,9 @@ void create_local_K(Matrix *K,int element_id, Mesh *M)
      //Bt.show(); 
      
      //At.show();
-
-    if(element_id == 1636){
-
-    cout << J << " " << volume << " " << "\n"  ;
-    }
     
     if(J == 0 || isnan(J)){
         J = 0.000006;
-    }
-    if(volume == 0 || isnan(volume)){
-        volume = 0.000006;
     }
 
     Matrix res1, res2, res3;
@@ -314,7 +280,7 @@ void apply_dirichlet_boundary_conditions(Matrix *K, Vector *b, Mesh *M)
     }
 }
 
-void merge_results_with_dirichlet(Vector *T, Vector *Tf, int n, Mesh *M)
+void merge_results_with_dirichlet(Vector *X, Vector *Tf, int n, Mesh *M)
 {
     int num_dirichlet = M->get_quantity(NUM_DIRICHLET);
 
@@ -333,13 +299,13 @@ void merge_results_with_dirichlet(Vector *T, Vector *Tf, int n, Mesh *M)
         }
         else
         {
-            Tf->set(T->get(cont_T), i);
+            Tf->set(X->get(cont_T), i);
             cont_T++;
         }
     }
 }
 
-void solve_system(Matrix *K, Vector *b, Vector *T)
+void solve_system(Matrix *K, Vector *b, Vector *X)
 {
     int n = K->get_nrows();
 
@@ -351,5 +317,5 @@ void solve_system(Matrix *K, Vector *b, Vector *T)
 
     //Kinv.show();
     cout << "\tPerforming final calculation...\n\n";
-    product_matrix_by_vector(&Kinv, b, n, n, T);
+    product_matrix_by_vector(&Kinv, b, n, n, X);
 }

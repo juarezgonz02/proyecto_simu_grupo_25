@@ -24,6 +24,12 @@ class Matrix {
             free(data);
         }
 
+
+        /**
+         * @brief Initializate values of matrix / vector filling it with zeros 
+         * 
+         * This values are Accumulators so its needed to start as 0
+         */
         void init(){
             for(int r = 0; r < nrows; r++)
                 for(int c = 0; c < ncols; c++)

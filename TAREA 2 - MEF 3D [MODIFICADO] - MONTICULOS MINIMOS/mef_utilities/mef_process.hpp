@@ -141,14 +141,6 @@ void create_local_K(Matrix *K,int element_id, Mesh *M)
     transpose(&B, 3, 4, &Bt);
     transpose(&A, 3, 3, &At);
      
-     //Bt.show(); 
-     
-     //At.show();
-
-    if(element_id == 1636){
-
-    cout << J << " " << volume << " " << "\n"  ;
-    }
     
     if(J == 0 || isnan(J)){
         J = 0.000006;
@@ -340,7 +332,7 @@ void merge_results_with_dirichlet(Vector *T, Vector *Tf, int n, Mesh *M)
     }
 }
 
-void solve_system(Matrix *K, Vector *b, Vector *T)
+void solve_system(Matrix *K, Vector *b, Vector *X)
 {
     int n = K->get_nrows();
 
@@ -352,5 +344,5 @@ void solve_system(Matrix *K, Vector *b, Vector *T)
 
     //Kinv.show();
     cout << "\tPerforming final calculation...\n\n";
-    product_matrix_by_vector(&Kinv, b, n, n, T);
+    product_matrix_by_vector(&Kinv, b, n, n, X);
 }

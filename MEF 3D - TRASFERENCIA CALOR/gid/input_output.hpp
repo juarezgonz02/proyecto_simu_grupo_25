@@ -53,36 +53,51 @@ void read_input(string filename, Mesh* M){
 
     M->init_arrays();
 
+    // While reading there are lines that limit sections, such as Elements / Conditions / Nodes  
+    // So read that line, saving a temp variable, in order to skip the lines 
     dat_file >> line;
 
+
+    /**
+     * @brief Read node list
+     * 
+     */
     for(int i = 0; i < num_nodes; i++){
         int id;
         float x, y, z;
         dat_file >> id >> x >> y >> z;
 
         M->insert_node(new Node(id,x,y, z), i);
-        //cout << i << " " << id << " " << x << " " << y << " " << z << "\n";
 
     }
 
+     /**
+     * @brief Read element list
+     * 
+     * Skip section limit lines and read element´s nodes and id
+     */
     dat_file >> line >> line;
     cout << "num_elements " << num_elements<< "\n";
     for(int i = 0; i < num_elements; i++){
 
         /**
-         * @name 3D MEF CHANGE #1
+         * @name 3D MEF CHANGE 
          * 
-         * - Reading and Adding 4th node from input file to Mesh  
+         * Reading and Adding 4th node from input file to Mesh  
          */
         int id, node1_id, node2_id, node3_id, node4_id;
 
         dat_file >> id >> node1_id >> node2_id >> node3_id >> node4_id ;
         
-        //cout << i << " " << id << " " << x << " " << y << " " << z << "\n";
-
         M->insert_element(new Element(id, M->get_node(node1_id-1), M->get_node(node2_id-1), M->get_node(node3_id-1), M->get_node(node4_id-1)), i);
     }
 
+
+     /**
+     * @brief Read conditions list
+     * 
+     * Skip section limit lines and read nodes with dirichlet conditions 
+     */
     dat_file >> line >> line;
 
     for(int i = 0; i < num_dirichlet; i++){
@@ -93,6 +108,11 @@ void read_input(string filename, Mesh* M){
 
     dat_file >> line >> line;
 
+     /**
+     * @brief Read conditions list
+     * 
+     * Skip section limit lines and read nodes with neumman conditions 
+     */
     for(int i = 0; i < num_neumann; i++){
        int id;
         dat_file >> id;
@@ -100,6 +120,7 @@ void read_input(string filename, Mesh* M){
         M->insert_neumann_condition(new Condition(M->get_node(id-1), T_hat), i);
     }
 
+    //ALWAYS CLOSE READ FILE STREAM 
     dat_file.close();
 }
 
@@ -118,9 +139,14 @@ void read_input(string filename, Mesh* M){
  */
 
 /**
- * @brief 
+ * @brief Output Writter
+ *  
  */
 void write_output(string filename, Vector* T){
+
+    /**
+     * 
+     */
     ofstream res_file(filename+".post.res");
     
     res_file << "GiD Post Results File 1.0\n";

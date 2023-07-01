@@ -6,14 +6,7 @@ class Vector {
         float* data;
 
         void create(){
-            try{
-
                 data = (float*) malloc(sizeof(float) * size);
-            }catch(exception e){
-                        std::cerr << e.what() << '\n';
-                        std::cerr << "NO HAY SUFICIENTE MEMORIA" << '\n';
-                        exit(EXIT_SUCCESS);
-            }
         }
 
     public:
@@ -26,6 +19,11 @@ class Vector {
             free(data);
         }
 
+        /**
+         * @brief Initializate values of matrix / vector filling it with zeros 
+         * 
+         * This values are Accumulators so its needed to start as 0
+         */
         void init(){
             for(int i = 0; i < size; i++)
                 data[i] = 0;
@@ -35,6 +33,7 @@ class Vector {
             size = num_values;
             create();
         }
+        
         int get_size(){
             return size;
         }
@@ -42,9 +41,11 @@ class Vector {
         void set(float value, int position){
             data[position] = value;
         }
+
         void add(float value, int position){
             data[position] += value;
         }
+        
         float get(int position){
             return data[position];
         }
